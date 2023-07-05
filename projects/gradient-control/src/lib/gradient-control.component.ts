@@ -34,9 +34,10 @@ export class GradientControlComponent implements OnInit {
   @Input() minColorStop: number = 0;
   @Input() maxColorStop: number = 1;
   @Input() removeAreaBackgroundColor: any = "rgba(255, 0, 0, 0.424)";
-  @Input() removeAreaTooltip: any = "Drag color pin here for remove color"
-  @Input() colorPinTooltip: any = "Double click to open color picker"
-  @Input() addColorTooltip: any = "Double click to add new color"
+  @Input() removeAreaTooltip: any = "Drag color pin here for remove color";
+  @Input() colorPinTooltip: any = "Double click to open color picker";
+  @Input() addColorTooltip: any = "Double click to add new color";
+  @Input() allowDoubleClick = true;
   @Input() containerClass: any = "";
   @Input() colorArray: any = [
     { color: '#0059ff', stop: 0, id: 0 },
@@ -105,7 +106,9 @@ export class GradientControlComponent implements OnInit {
   }
 
   async addColor(event, color) {
-    if (this.colorArray.length >= this.maxColors) {
+    console.log(event);
+    console.log(this.allowDoubleClick);
+    if (!this.allowDoubleClick || this.colorArray.length >= this.maxColors) {
       return;
     }
     let newPercent = Number((event.offsetX * 100 / event.target.offsetWidth).toFixed(2));
@@ -290,11 +293,16 @@ export class GradientControlComponent implements OnInit {
   }
 
   colorControlActivate(_e, color, i) {
+    console.log(this.allowDoubleClick);
+    if(this.allowDoubleClick){
     this.onColorControlActivate.emit({ index: i, colorObject: color })
+    }
   }
 
   openColorPicker(id) {
+    if(this.allowDoubleClick){
     document.getElementById(id).click();
+    }
   }
 
   changeColor(color, i) {
